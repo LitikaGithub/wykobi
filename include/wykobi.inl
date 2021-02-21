@@ -8523,7 +8523,7 @@ namespace wykobi
       segment_mid_point(x2,y2,x3,y3,midx1,midy1);
       segment_mid_point(x1,y1,x3,y3,midx2,midy2);
 
-      intersect(x1,y1,midx1,midy1,x2,y2,midx2,midy2,x,y);
+      intersection_point(x1,y1,midx1,midy1,x2,y2,midx2,midy2,x,y);
    }
 
    template <typename T>
