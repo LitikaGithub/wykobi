@@ -126,6 +126,7 @@ namespace wykobi
       template bool intersect<T>(const line<T,3>& line, const quadratic_bezier<T,3>& bezier, const std::size_t& steps);\
       template bool intersect<T>(const line<T,3>& line, const cubic_bezier<T,3>& bezier, const std::size_t& steps);\
       template bool intersect<T>(const triangle<T,2>& triangle1, const triangle<T,2>& triangle2);\
+      template bool intersect<T>(const triangle<T,3>& triangle1, const triangle<T,3>& triangle2);\
       template bool intersect<T>(const triangle<T,2>& triangle, const circle<T>& circle);\
       template bool intersect<T>(const triangle<T,2>& triangle, const rectangle<T>& rectangle);\
       template bool intersect<T>(const triangle<T,2>& triangle, const quadratic_bezier<T,2>& bezier, const std::size_t& steps);\
