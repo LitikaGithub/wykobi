@@ -29,20 +29,6 @@
 
 namespace wykobi
 {
-   #define WYKOBI_DOUBLE_PRECISION
-
-   #ifdef WYKOBI_SINGLE_PRECISION
-    typedef float Float;
-   #endif
-
-   #ifdef WYKOBI_DOUBLE_PRECISION
-    typedef double Float;
-   #endif
-
-   #ifdef WYKOBI_EXTENDED_PRECISION
-    typedef long double Float;
-   #endif
-
    /*************[ Epsilon constants ]*************/
    template <typename T> inline T epsilon() { return std::numeric_limits<T>::epsilon();} 
 

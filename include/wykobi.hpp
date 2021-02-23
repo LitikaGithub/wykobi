@@ -112,7 +112,7 @@ namespace wykobi
    template <typename T, std::size_t D>
    class pointnd;
 
-   template <typename T = Float>
+   template <typename T>
    class point2d : public geometric_entity
    {
    public:
@@ -169,7 +169,7 @@ namespace wykobi
       return point2d<T>(-p1.x, -p1.y);
    }
 
-   template <typename T = Float>
+   template <typename T>
    class point3d : public geometric_entity
    {
    public:
@@ -391,14 +391,15 @@ namespace wykobi
    private:
 
       PointType _data[PointCount];
-      Float    _len;
+      T    _len;
+
       void calculate_norm() {
-         _len = T(0.0);
+         double tmpValue = 0.0;
          for (size_t i = 0; i < Dimension; ++i) {
-            _len += static_cast<Float>((_data[0][i] - _data[1][i]) * (_data[0][i] - _data[1][i]));
+            tmpValue += ((static_cast<double>(_data[0][i]) - static_cast<double>(_data[1][i])) * (static_cast<double>(_data[0][i]) - static_cast<double>(_data[1][i])));
          }
-         _len = sqrt(_len);
-      }
+         _len = T(sqrt(tmpValue));
+       }
 
    public:
 
