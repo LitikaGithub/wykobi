@@ -1039,19 +1039,6 @@ namespace wykobi
       std::vector<T> tan_;
    };
 
-   /************[ General Definitions ]************/
-   typedef segment <Float,2> segment2d;
-   typedef line    <Float,2> line2d;
-   typedef ray     <Float,2> ray2d;
-   typedef triangle<Float,2> triangle2d;
-   typedef quadix  <Float,2> quadix2d;
-
-   typedef segment <Float,3> segment3d;
-   typedef line    <Float,3> line3d;
-   typedef ray     <Float,3> ray3d;
-   typedef triangle<Float,3> triangle3d;
-   typedef quadix  <Float,3> quadix3d;
-
    template <typename T> T epsilon();
    template<> inline double epsilon<double>() { return static_cast<double>(Epsilon_Medium); }
    template<> inline  float epsilon<float> () { return static_cast<float> (Epsilon_Low   ); }
