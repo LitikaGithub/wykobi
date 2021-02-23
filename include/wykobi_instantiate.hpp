@@ -1093,23 +1093,15 @@ namespace wykobi
       template bool is_equal<T>(const T& val1, const T& val2, const T& epsilon);\
       template bool is_equal<T>(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon);\
       template bool is_equal<T>(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon);\
-      template bool is_equal<T>(const T& val1, const T& val2);\
-      template bool is_equal<T>(const point2d<T>& point1, const point2d<T>& point2);\
-      template bool is_equal<T>(const point3d<T>& point1, const point3d<T>& point2);\
-      template bool is_equal<T>(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2);\
-      template bool is_equal<T>(const circle<T>& circle1, const circle<T>& circle2);\
-      template bool is_equal<T>(const box<T,3>& box1, const box<T,3>& box2);\
-      template bool is_equal<T>(const sphere<T>& sphere1, const sphere<T>& sphere2);\
+      template bool is_equal<T>(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2, const T& epsilon);\
+      template bool is_equal<T>(const circle<T>& circle1, const circle<T>& circle2, const T& epsilon);\
+      template bool is_equal<T>(const box<T,3>& box1, const box<T,3>& box2, const T& epsilon);\
+      template bool is_equal<T>(const sphere<T>& sphere1, const sphere<T>& sphere2, const T& epsilon);\
       template bool not_equal<T>(const T& val1, const T& val2, const T& epsilon);\
       template bool not_equal<T>(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon);\
       template bool not_equal<T>(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon);\
-      template bool not_equal<T>(const T& val1, const T& val2);\
-      template bool not_equal<T>(const point2d<T>& point1, const point2d<T>& point2);\
-      template bool not_equal<T>(const point3d<T>& point1, const point3d<T>& point2);\
       template bool less_than_or_equal<T>(const T& val1, const T& val2, const T& epsilon);\
-      template bool less_than_or_equal<T>(const T& val1, const T& val2);\
       template bool greater_than_or_equal<T>(const T& val1, const T& val2, const T& epsilon);\
-      template bool greater_than_or_equal<T>(const T& val1, const T& val2);\
       template bool operator< <T>(const point2d<T>& point1, const point2d<T>& point2);\
       template bool operator< <T>(const point3d<T>& point1, const point3d<T>& point2);\
       template bool operator><T>(const point2d<T>& point1, const point2d<T>& point2);\

@@ -4055,33 +4055,22 @@ namespace wykobi
    template <typename T> inline vector2d<T> operator-(const point2d<T>& p1, const point2d<T>& p2);
    template <typename T> inline vector3d<T> operator-(const point3d<T>& p1, const point3d<T>& p2);
 
-   template <typename T> inline bool is_equal(const T& val1, const T& val2, const T& epsilon);
-   template <typename T> inline bool is_equal(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon);
-   template <typename T> inline bool is_equal(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon);
+   template <typename T> inline bool is_equal(const T& val1, const T& val2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool is_equal(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool is_equal(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon = epsilon<T>());
 
-   template <typename T> inline bool is_equal(const vector2d<T>& vector1, const vector2d<T>& vector2, const T& epsilon);
-   template <typename T> inline bool is_equal(const vector3d<T>& vector1, const vector3d<T>& vector2, const T& epsilon);
+   template <typename T> inline bool is_equal(const vector2d<T>& vector1, const vector2d<T>& vector2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool is_equal(const vector3d<T>& vector1, const vector3d<T>& vector2, const T& epsilon = epsilon<T>());
 
-   template <typename T> inline bool is_equal(const T& val1, const T& val2);
-   template <typename T> inline bool is_equal(const point2d<T>& point1, const point2d<T>& point2);
-   template <typename T> inline bool is_equal(const point3d<T>& point1, const point3d<T>& point2);
+   template <typename T> inline bool is_equal(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool is_equal(const circle<T>& circle1, const circle<T>& circle2, const T& epsilon = epsilon<T>());
 
-   template <typename T> inline bool is_equal(const vector2d<T>& vector1, const vector2d<T>& vector2);
-   template <typename T> inline bool is_equal(const vector3d<T>& vector1, const vector3d<T>& vector2);
+   template <typename T> inline bool is_equal(const box<T,3>& box1, const box<T,3>& box2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool is_equal(const sphere<T>& sphere1, const sphere<T>& sphere2, const T& epsilon = epsilon<T>());
 
-   template <typename T> inline bool is_equal(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2);
-   template <typename T> inline bool is_equal(const circle<T>& circle1, const circle<T>& circle2);
-
-   template <typename T> inline bool is_equal(const box<T,3>& box1, const box<T,3>& box2);
-   template <typename T> inline bool is_equal(const sphere<T>& sphere1, const sphere<T>& sphere2);
-
-   template <typename T> inline bool not_equal(const T& val1, const T& val2, const T& epsilon);
-   template <typename T> inline bool not_equal(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon);
-   template <typename T> inline bool not_equal(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon);
-
-   template <typename T> inline bool not_equal(const T& val1, const T& val2);
-   template <typename T> inline bool not_equal(const point2d<T>& point1, const point2d<T>& point2);
-   template <typename T> inline bool not_equal(const point3d<T>& point1, const point3d<T>& point2);
+   template <typename T> inline bool not_equal(const T& val1, const T& val2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool not_equal(const point2d<T>& point1, const point2d<T>& point2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool not_equal(const point3d<T>& point1, const point3d<T>& point2, const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool not_equal(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2);
    template <typename T> inline bool not_equal(const circle<T>& circle1, const circle<T>& circle2);
@@ -4089,12 +4078,9 @@ namespace wykobi
    template <typename T> inline bool not_equal(const box<T,3>& box1, const box<T,3>& box2);
    template <typename T> inline bool not_equal(const sphere<T>& sphere1, const sphere<T>& sphere2);
 
-   template <typename T> inline bool less_than_or_equal(const T& val1, const T& val2, const T& epsilon);
-   template <typename T> inline bool less_than_or_equal(const T& val1, const T& val2);
-
-   template <typename T> inline bool greater_than_or_equal(const T& val1, const T& val2, const T& epsilon);
-   template <typename T> inline bool greater_than_or_equal(const T& val1, const T& val2);
-
+   template <typename T> inline bool less_than_or_equal(const T& val1, const T& val2, const T& epsilon = epsilon<T>());
+   template <typename T> inline bool greater_than_or_equal(const T& val1, const T& val2, const T& epsilon = epsilon<T>());
+ 
    template <typename T> inline bool operator < (const point2d<T>& point1, const point2d<T>& point2);
    template <typename T> inline bool operator < (const point3d<T>& point1, const point3d<T>& point2);
    template <typename T> inline bool operator > (const point2d<T>& point1, const point2d<T>& point2);

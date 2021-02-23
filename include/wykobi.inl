@@ -15530,11 +15530,16 @@ namespace wykobi
    template <typename T>
    inline bool is_equal(const T& val1, const T& val2, const T& epsilon)
    {
-      T diff = val1 - val2;
-
-      assert(((-epsilon <= diff) && (diff <= epsilon)) == (abs(diff) <= epsilon));
-
-      return ((-epsilon <= diff) && (diff <= epsilon));
+      // https://www.boost.org/doc/libs/1_74_0/libs/test/doc/html/boost_test/testing_tools/extended_comparison/floating_point/floating_points_comparison_theory.html
+      if (val1 != 0.0 && val2 != 0.0)
+      {
+         return abs(val1 - val2) / abs(val1) <= epsilon &&  
+                abs(val1 - val2) / abs(val2) <= epsilon;
+      }
+      else
+      {
+            return abs(val1 - val2) <= epsilon;
+      }
    }
 
    template <typename T>
@@ -15566,74 +15571,40 @@ namespace wykobi
    }
 
    template <typename T>
-   inline bool is_equal(const T& val1, const T& val2)
+   inline bool is_equal(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2, const T& epsilon)
    {
-      return is_equal(val1,val2,epsilon<T>());
+      return (is_equal(rectangle1[0],rectangle2[0], epsilon) && is_equal(rectangle1[1],rectangle2[1], epsilon)) ||
+             (is_equal(rectangle1[0],rectangle2[1], epsilon) && is_equal(rectangle1[1],rectangle2[0], epsilon)) ;
    }
 
    template <typename T>
-   inline bool is_equal(const point2d<T>& point1, const point2d<T>& point2)
+   inline bool is_equal(const circle<T>& circle1, const circle<T>& circle2, const T& epsilon)
    {
-      return is_equal(point1,point2,epsilon<T>());
+      return is_equal(circle1.x,circle2.x, epsilon) &&
+             is_equal(circle1.y,circle2.y, epsilon) &&
+             is_equal(circle1.radius,circle2.radius, epsilon);
    }
 
    template <typename T>
-   inline bool is_equal(const point3d<T>& point1, const point3d<T>& point2)
+   inline bool is_equal(const box<T,3>& box1, const box<T,3>& box2, const T& epsilon)
    {
-      return is_equal(point1,point2,epsilon<T>());
+      return (is_equal(box1[0],box2[0], epsilon) && is_equal(box1[1],box2[1], epsilon)) ||
+             (is_equal(box1[0],box2[1], epsilon) && is_equal(box1[1],box2[0], epsilon)) ;
    }
 
    template <typename T>
-   inline bool is_equal(const vector2d<T>& vector1, const vector2d<T>& vector2)
+   inline bool is_equal(const sphere<T>& sphere1, const sphere<T>& sphere2, const T& epsilon)
    {
-      return is_equal(vector1,vector2,epsilon<T>());
-   }
-
-   template <typename T>
-   inline bool is_equal(const vector3d<T>& vector1, const vector3d<T>& vector2)
-   {
-      return is_equal(vector1,vector2,epsilon<T>());
-   }
-
-   template <typename T>
-   inline bool is_equal(const rectangle<T>& rectangle1, const rectangle<T>& rectangle2)
-   {
-      return (is_equal(rectangle1[0],rectangle2[0]) && is_equal(rectangle1[1],rectangle2[1])) ||
-             (is_equal(rectangle1[0],rectangle2[1]) && is_equal(rectangle1[1],rectangle2[0])) ;
-   }
-
-   template <typename T>
-   inline bool is_equal(const circle<T>& circle1, const circle<T>& circle2)
-   {
-      return is_equal(circle1.x,circle2.x) &&
-             is_equal(circle1.y,circle2.y) &&
-             is_equal(circle1.radius,circle2.radius);
-   }
-
-   template <typename T>
-   inline bool is_equal(const box<T,3>& box1, const box<T,3>& box2)
-   {
-      return (is_equal(box1[0],box2[0]) && is_equal(box1[1],box2[1])) ||
-             (is_equal(box1[0],box2[1]) && is_equal(box1[1],box2[0])) ;
-   }
-
-   template <typename T>
-   inline bool is_equal(const sphere<T>& sphere1, const sphere<T>& sphere2)
-   {
-      return is_equal(sphere1.x,sphere2.x) &&
-             is_equal(sphere1.y,sphere2.y) &&
-             is_equal(sphere1.z,sphere2.z) &&
-             is_equal(sphere1.radius,sphere2.radius);
+      return is_equal(sphere1.x,sphere2.x, epsilon) &&
+             is_equal(sphere1.y,sphere2.y, epsilon) &&
+             is_equal(sphere1.z,sphere2.z, epsilon) &&
+             is_equal(sphere1.radius,sphere2.radius, epsilon);
    }
 
    template <typename T>
    inline bool not_equal(const T& val1, const T& val2, const T& epsilon)
    {
-      T diff = val1 - val2;
-
-      assert(((-epsilon > diff) || (diff > epsilon)) == (abs(val1 - val2) > epsilon));
-
-      return ((-epsilon > diff) || (diff > epsilon));
+      return !is_equal(val1, val2, epsilon);
    }
 
    template <typename T>
@@ -15648,24 +15619,6 @@ namespace wykobi
       return not_equal(point1.x, point2.x, epsilon) ||
              not_equal(point1.y, point2.y, epsilon) ||
              not_equal(point1.z, point2.z, epsilon) ;
-   }
-
-   template <typename T>
-   inline bool not_equal(const T& val1, const T& val2)
-   {
-      return not_equal(val1,val2,epsilon<T>());
-   }
-
-   template <typename T>
-   inline bool not_equal(const point2d<T>& point1, const point2d<T>& point2)
-   {
-      return not_equal(point1,point2,epsilon<T>());
-   }
-
-   template <typename T>
-   inline bool not_equal(const point3d<T>& point1, const point3d<T>& point2)
-   {
-      return not_equal(point1,point2,epsilon<T>());
    }
 
    template <typename T>
@@ -15699,21 +15652,9 @@ namespace wykobi
    }
 
    template <typename T>
-   inline bool less_than_or_equal(const T& val1, const T& val2)
-   {
-      return (val1 < val2) || is_equal(val1,val2,epsilon<T>());
-   }
-
-   template <typename T>
    inline bool greater_than_or_equal(const T& val1, const T& val2, const T& epsilon)
    {
       return (val1 > val2) || is_equal(val1,val2,epsilon);
-   }
-
-   template <typename T>
-   inline bool greater_than_or_equal(const T& val1, const T& val2)
-   {
-      return (val1 > val2) || is_equal(val1,val2,epsilon<T>());
    }
 
    template <typename T>

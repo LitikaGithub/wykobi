@@ -1196,29 +1196,9 @@ namespace wykobi
    }
 
    template <typename T, std::size_t D>
-   inline bool is_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2)
-   {
-      for (std::size_t i = 0; i < D; ++i)
-      {
-         if (!is_equal(point1[i],point2[i],epsilon<T>()))
-         {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   template <typename T, std::size_t D>
    inline bool not_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2, const T& epsilon)
    {
       return !is_equal(point1,point2,epsilon);
-   }
-
-   template <typename T, std::size_t D>
-   inline bool not_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2)
-   {
-      return !is_equal(point1,point2);
    }
 
    template <typename T, std::size_t D>

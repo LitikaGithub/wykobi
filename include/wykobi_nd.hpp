@@ -278,13 +278,7 @@ namespace wykobi
    inline bool is_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2, const T& epsilon);
 
    template <typename T, std::size_t D>
-   inline bool is_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2);
-
-   template <typename T, std::size_t D>
    inline bool not_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2, const T& epsilon);
-
-   template <typename T, std::size_t D>
-   inline bool not_equal(const pointnd<T,D>& point1, const pointnd<T,D>& point2);
 
    template <typename T, std::size_t D>
    inline pointnd<T,D> degenerate_pointnd();
