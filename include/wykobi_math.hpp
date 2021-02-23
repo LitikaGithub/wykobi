@@ -32,6 +32,8 @@ namespace wykobi
    /*************[ Epsilon constants ]*************/
    template <typename T> inline T epsilon() { return std::numeric_limits<T>::epsilon();} 
 
+   /*************[ Infinity constants ]*************/
+   template <typename T> inline T infinity() { return std::numeric_limits<T>::infinity();}
 
    /********[ Random resolution constants ]********/
    static const std::size_t RANDOM_RESOLUTION_INT = 1000000000;
@@ -51,7 +53,8 @@ namespace wykobi
    template <typename T> inline T min(const T& value1, const T& value2);
    template <typename T> inline T max(const T& value1, const T& value2, const T& value3);
    template <typename T> inline T min(const T& value1, const T& value2, const T& value3);
-   template <typename T> inline T infinity();
+
+
 
    template <typename T> inline T sin(const T& value);
    template <typename T> inline T cos(const T& value);
@@ -108,15 +111,9 @@ namespace wykobi
    }
 
    template <typename T>
-   inline T infinity()
-   {
-      return std::numeric_limits<T>::infinity();
-   }
-
-   template <typename T>
    inline T is_inifinity(T x)
    {
-      return x == std::numeric_limits<T>::infinity();
+      return x == infinity<T>();
    }
 
    template <typename T>
