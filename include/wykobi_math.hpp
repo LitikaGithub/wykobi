@@ -54,10 +54,10 @@ namespace wykobi
    static const double      RANDOM_RESOLUTION_FLT = RANDOM_RESOLUTION_INT * 1.0;
 
    /********[                             ]********/
-   static const Float PI        = Float(std::asin(double(0.0)));
-   static const Float PI2       = PI * Float(2);
-   static const Float PIDiv180  = PI / Float(180.0);
-   static const Float _180DivPI = Float(1.0) / PIDiv180;
+   static const double PI        = 3.1415926535897932384626433832795028841971693993751;
+   static const double PI2       = 6.2831853071795864769252867665590057683943387987502;    // PI * 2.0
+   static const double PIDiv180  = 0.017453292519943295769236907684886127134428718885417;  // PI / 180.0
+   static const double _180DivPI = 57.295779513082320876798154814105170332405472466564;    // 1.0 / PIDiv180
 
 
    template <typename T> inline T sqr(const T& val);
