@@ -1039,10 +1039,6 @@ namespace wykobi
       std::vector<T> tan_;
    };
 
-   template <typename T> T epsilon();
-   template<> inline double epsilon<double>() { return static_cast<double>(Epsilon_Medium); }
-   template<> inline  float epsilon<float> () { return static_cast<float> (Epsilon_Low   ); }
-
    /**
     * @brief Check the position of vector (px,py) relative
     *        to vector (x1,y1)--(x2,y2) for RHS coordinate
@@ -1226,13 +1222,13 @@ namespace wykobi
    inline bool collinear(const T& x1, const T& y1,
                          const T& x2, const T& y2,
                          const T& x3, const T& y3,
-                         const T& epsilon = T(Epsilon));
+                         const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool collinear(const T& x1, const T& y1, const T& z1,
                          const T& x2, const T& y2, const T& z2,
                          const T& x3, const T& y3, const T& z3,
-                         const T& epsilon = T(Epsilon));
+                         const T& epsilon = epsilon<T>());
 
 
    template <typename T>
@@ -1247,22 +1243,22 @@ namespace wykobi
    template <typename T>
    inline bool robust_collinear(const T& x1, const T& y1,
                                 const T& x2, const T& y2,
-                                const T& x3, const T& y3, const T& epsilon = T(Epsilon));
+                                const T& x3, const T& y3, const T& epsilon = epsilon<T>());
    template <typename T>
-   inline bool robust_collinear(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3, const T& epsilon = T(Epsilon));
+   inline bool robust_collinear(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3, const T& epsilon = epsilon<T>());
 
    template <typename T>
-   inline bool robust_collinear(const line<T,2>& line, const point2d<T>& point, const T& epsilon = T(Epsilon));
+   inline bool robust_collinear(const line<T,2>& line, const point2d<T>& point, const T& epsilon = epsilon<T>());
 
    template <typename T>
-   inline bool robust_collinear(const line<T,3>& line, const point3d<T>& point, const T& epsilon = T(Epsilon));
+   inline bool robust_collinear(const line<T,3>& line, const point3d<T>& point, const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_collinear(const T& x1, const T& y1, const T& z1,
                                 const T& x2, const T& y2, const T& z2,
-                                const T& x3, const T& y3, const T& z3, const T& epsilon = T(Epsilon));
+                                const T& x3, const T& y3, const T& z3, const T& epsilon = epsilon<T>());
    template <typename T>
-   inline bool robust_collinear(const point3d<T>& point1, const point3d<T>& point2, const point3d<T>& point3, const T& epsilon = T(Epsilon));
+   inline bool robust_collinear(const point3d<T>& point1, const point3d<T>& point2, const point3d<T>& point3, const T& epsilon = epsilon<T>());
 
    /**
     * @brief Check whether (px, py) is on the line segment (x1,y1)--(x2,y2)
@@ -1322,7 +1318,7 @@ namespace wykobi
                                                      const point3d<T> point2,
                                                      const point3d<T> point3,
                                                      const point3d<T> point4,
-                                                     const T& epsilon = T(Epsilon));
+                                                     const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool coplanar(const line<T,3>& line1, const line<T,3>& line2);
    template <typename T> inline bool coplanar(const ray<T,3>& ray1, const ray<T,3>& ray2);
@@ -1335,21 +1331,21 @@ namespace wykobi
                                                 const T& x2, const T& y2,
                                                 const T& x3, const T& y3,
                                                 const T& x4, const T& y4,
-                                                const T& epsilon = T(Epsilon));
+                                                const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool cocircular(const point2d<T>& point1,
                                                 const point2d<T>& point2,
                                                 const point2d<T>& point3,
                                                 const point2d<T>& point4,
-                                                const T& epsilon = T(Epsilon));
+                                                const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool cocircular(const triangle<T,2>& triangle,
                                                 const point2d<T>& point,
-                                                const T& epsilon = T(Epsilon));
+                                                const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool cocircular(const circle<T>& circle,
                                                 const point2d<T>& point,
-                                                const T& epsilon = T(Epsilon));
+                                                const T& epsilon = epsilon<T>());
 
    template <typename T> inline bool is_skinny_triangle(const T& x1, const T& y1,
                                                         const T& x2, const T& y2,
@@ -1827,106 +1823,106 @@ namespace wykobi
                         const T& x2, const T& y2,
                         const T& x3, const T& y3,
                         const T& x4, const T& y4,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const point2d<T>& point1,
                         const point2d<T>& point2,
                         const point2d<T>& point3,
                         const point2d<T>& point4,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const segment<T,2>& segment1,
                         const segment<T,2>& segment2,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const line<T,2>& line1,
                         const line<T,2>& line2,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const T& x1, const T& y1, const T& z1,
                         const T& x2, const T& y2, const T& z2,
                         const T& x3, const T& y3, const T& z3,
                         const T& x4, const T& y4, const T& z4,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const point3d<T>& point1,
                         const point3d<T>& point2,
                         const point3d<T>& point3,
                         const point3d<T>& point4,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const segment<T,3>& segment1,
                         const segment<T,3>& segment2,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool parallel(const line<T,3>& line1,
                         const line<T,3>& line2,
-                        const T& epsilon = T(Epsilon));
+                        const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const T& x1, const T& y1,
                                const T& x2, const T& y2,
                                const T& x3, const T& y3,
                                const T& x4, const T& y4,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const point2d<T>& point1,
                                const point2d<T>& point2,
                                const point2d<T>& point3,
                                const point2d<T>& point4,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const segment<T,2>& segment1,
                                const segment<T,2>& segment2,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const line<T,2>& line1,
                                const line<T,2>& line2,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const line<T,2>& line,
                                const segment<T,2>& segment,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const T& x1, const T& y1, const T& z1,
                                const T& x2, const T& y2, const T& z2,
                                const T& x3, const T& y3, const T& z3,
                                const T& x4, const T& y4, const T& z4,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const point3d<T>& point1,
                                const point3d<T>& point2,
                                const point3d<T>& point3,
                                const point3d<T>& point4,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const segment<T,3>& segment1,
                                const segment<T,3>& segment2,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const line<T,3>& line1,
                                const line<T,3>& line2,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_parallel(const line<T,3>& line,
                                const segment<T,3>& segment,
-                               const T& epsilon = T(Epsilon));
+                               const T& epsilon = epsilon<T>());
 
 
    template <typename T>
@@ -1934,111 +1930,111 @@ namespace wykobi
                              const T& x2, const T& y2,
                              const T& x3, const T& y3,
                              const T& x4, const T& y4,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const point2d<T>& point1,
                              const point2d<T>& point2,
                              const point2d<T>& point3,
                              const point2d<T>& point4,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const segment<T,2>& segment1,
                              const segment<T,2>& segment2,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const line<T,2>& line1,
                              const line<T,2>& line2,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const line<T,2>& line,
                              const segment<T,2>& segment,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const T& x1, const T& y1, const T& z1,
                              const T& x2, const T& y2, const T& z2,
                              const T& x3, const T& y3, const T& z3,
                              const T& x4, const T& y4, const T& z4,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const point3d<T>& point1,
                              const point3d<T>& point2,
                              const point3d<T>& point3,
                              const point3d<T>& point4,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const segment<T,3>& segment1,
                              const segment<T,3>& segment2,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const line<T,3>& line,
                              const segment<T,3>& segment,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool perpendicular(const line<T,3>& line1,
                              const line<T,3>& line2,
-                             const T& epsilon = T(Epsilon));
+                             const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const T& x1, const T& y1,
                                     const T& x2, const T& y2,
                                     const T& x3, const T& y3,
                                     const T& x4, const T& y4,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const point2d<T>& point1,
                                     const point2d<T>& point2,
                                     const point2d<T>& point3,
                                     const point2d<T>& point4,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const segment<T,2>& segment1,
                                     const segment<T,2>& segment2,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const line<T,2>& line1,
                                     const line<T,2>& line2,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const T& x1, const T& y1, const T& z1,
                                     const T& x2, const T& y2, const T& z2,
                                     const T& x3, const T& y3, const T& z3,
                                     const T& x4, const T& y4, const T& z4,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const point3d<T>& point1,
                                     const point3d<T>& point2,
                                     const point3d<T>& point3,
                                     const point3d<T>& point4,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const segment<T,3>& segment1,
                                     const segment<T,3>& segment2,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const line<T,3>& line1,
                                     const line<T,3>& line2,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool robust_perpendicular(const line<T,2>& line,
                                     const segment<T,2>& segment,
-                                    const T& epsilon = T(Epsilon));
+                                    const T& epsilon = epsilon<T>());
 
    template <typename T>
    inline bool line_to_line_intersect(const T& x1, const T& y1,
@@ -2477,16 +2473,16 @@ namespace wykobi
    inline bool point_on_circle(const point2d<T>& point, const circle<T>& circle);
 
    template <typename T>
-   inline bool point_on_bezier(const point2d<T>& point, const quadratic_bezier<T,2>& bezier, const std::size_t& steps = 1000, const T& fuzzy = T(Epsilon));
+   inline bool point_on_bezier(const point2d<T>& point, const quadratic_bezier<T,2>& bezier, const std::size_t& steps = 1000, const T& fuzzy = epsilon<T>());
 
    template <typename T>
-   inline bool point_on_bezier(const point2d<T>& point, const cubic_bezier<T,2>& bezier, const std::size_t& steps = 1000, const T& fuzzy = T(Epsilon));
+   inline bool point_on_bezier(const point2d<T>& point, const cubic_bezier<T,2>& bezier, const std::size_t& steps = 1000, const T& fuzzy = epsilon<T>());
 
    template <typename T>
-   inline bool point_on_bezier(const point3d<T>& point, const quadratic_bezier<T,3>& bezier, const std::size_t& steps = 1000, const T& fuzzy = T(Epsilon));
+   inline bool point_on_bezier(const point3d<T>& point, const quadratic_bezier<T,3>& bezier, const std::size_t& steps = 1000, const T& fuzzy = epsilon<T>());
 
    template <typename T>
-   inline bool point_on_bezier(const point3d<T>& point, const cubic_bezier<T,3>& bezier, const std::size_t& steps = 1000, const T& fuzzy = T(Epsilon));
+   inline bool point_on_bezier(const point3d<T>& point, const cubic_bezier<T,3>& bezier, const std::size_t& steps = 1000, const T& fuzzy = epsilon<T>());
 
    template <typename T>
    inline point2d<T> isogonal_conjugate(const point2d<T>& point, const triangle<T,2>& triangle);

@@ -1200,7 +1200,7 @@ namespace wykobi
    {
       for (std::size_t i = 0; i < D; ++i)
       {
-         if (!is_equal(point1[i],point2[i],T(Epsilon)))
+         if (!is_equal(point1[i],point2[i],epsilon<T>()))
          {
             return false;
          }

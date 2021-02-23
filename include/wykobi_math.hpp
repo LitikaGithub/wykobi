@@ -44,10 +44,8 @@ namespace wykobi
    #endif
 
    /*************[ Epsilon constants ]*************/
-   static const Float Epsilon_Medium    = std::numeric_limits<double>::epsilon() ;
-   static const Float Epsilon_Low       = std::numeric_limits<float>::epsilon() ;
-   static const Float Epsilon           = std::numeric_limits<Float>::epsilon() ;
-   static const Float Infinity          = std::numeric_limits<Float>::infinity();
+   template <typename T> inline T epsilon() { return std::numeric_limits<T>::epsilon();} 
+
 
    /********[ Random resolution constants ]********/
    static const std::size_t RANDOM_RESOLUTION_INT = 1000000000;

@@ -897,9 +897,9 @@ namespace wykobi
       T adz = abs(dz);
       if (abs(mz) > ez + adz) return false;
 
-      adx += T(Epsilon);
-      ady += T(Epsilon);
-      adz += T(Epsilon);
+      adx += epsilon<T>();
+      ady += epsilon<T>();
+      adz += epsilon<T>();
 
       if (abs(my * dz - mz * dy) > (ey * adz + ez * ady)) return false;
       if (abs(mz * dx - mx * dz) > (ex * adz + ez * adx)) return false;
@@ -6572,7 +6572,7 @@ namespace wykobi
         p1_.x, p1_.y, p1_.z,
         p2.x , p2.y , p2.z ,
         p2_.x, p2_.y, p2_.z,
-        px   , py   , pz   , T(Epsilon)
+        px   , py   , pz   , epsilon<T>()
       );
    }
 
@@ -6739,7 +6739,7 @@ namespace wykobi
                              (
                                create_line_from_bisector(x1, y1, z1, x2, y2, z2, x3, y3, z3),
                                create_line_from_bisector(x2, y2, z2, x3, y3, z3, x1, y1, z1),
-                               T(Epsilon)
+                               epsilon<T>()
                              );
 
       return make_sphere
@@ -15568,31 +15568,31 @@ namespace wykobi
    template <typename T>
    inline bool is_equal(const T& val1, const T& val2)
    {
-      return is_equal(val1,val2,T(Epsilon));
+      return is_equal(val1,val2,epsilon<T>());
    }
 
    template <typename T>
    inline bool is_equal(const point2d<T>& point1, const point2d<T>& point2)
    {
-      return is_equal(point1,point2,T(Epsilon));
+      return is_equal(point1,point2,epsilon<T>());
    }
 
    template <typename T>
    inline bool is_equal(const point3d<T>& point1, const point3d<T>& point2)
    {
-      return is_equal(point1,point2,T(Epsilon));
+      return is_equal(point1,point2,epsilon<T>());
    }
 
    template <typename T>
    inline bool is_equal(const vector2d<T>& vector1, const vector2d<T>& vector2)
    {
-      return is_equal(vector1,vector2,T(Epsilon));
+      return is_equal(vector1,vector2,epsilon<T>());
    }
 
    template <typename T>
    inline bool is_equal(const vector3d<T>& vector1, const vector3d<T>& vector2)
    {
-      return is_equal(vector1,vector2,T(Epsilon));
+      return is_equal(vector1,vector2,epsilon<T>());
    }
 
    template <typename T>
@@ -15653,19 +15653,19 @@ namespace wykobi
    template <typename T>
    inline bool not_equal(const T& val1, const T& val2)
    {
-      return not_equal(val1,val2,T(Epsilon));
+      return not_equal(val1,val2,epsilon<T>());
    }
 
    template <typename T>
    inline bool not_equal(const point2d<T>& point1, const point2d<T>& point2)
    {
-      return not_equal(point1,point2,T(Epsilon));
+      return not_equal(point1,point2,epsilon<T>());
    }
 
    template <typename T>
    inline bool not_equal(const point3d<T>& point1, const point3d<T>& point2)
    {
-      return not_equal(point1,point2,T(Epsilon));
+      return not_equal(point1,point2,epsilon<T>());
    }
 
    template <typename T>
@@ -15701,7 +15701,7 @@ namespace wykobi
    template <typename T>
    inline bool less_than_or_equal(const T& val1, const T& val2)
    {
-      return (val1 < val2) || is_equal(val1,val2,T(Epsilon));
+      return (val1 < val2) || is_equal(val1,val2,epsilon<T>());
    }
 
    template <typename T>
@@ -15713,7 +15713,7 @@ namespace wykobi
    template <typename T>
    inline bool greater_than_or_equal(const T& val1, const T& val2)
    {
-      return (val1 > val2) || is_equal(val1,val2,T(Epsilon));
+      return (val1 > val2) || is_equal(val1,val2,epsilon<T>());
    }
 
    template <typename T>
