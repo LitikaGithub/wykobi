@@ -2,3 +2,4 @@ build/
 .cache
 doc/html
 doc/latex
+include/.vscode/
