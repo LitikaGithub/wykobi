@@ -409,7 +409,7 @@ namespace wykobi
       const T cy = (dx2 * dz1) - (dx1 * dz2);
       const T cz = (dx1 * dy2) - (dx2 * dy1);
 
-      return is_equal(cx * cx + cy * cy + cz * cz, epsilon);
+      return is_equal(cx * cx + cy * cy + cz * cz, T(0.0), epsilon);
    }
 
    template <typename T>
@@ -3552,7 +3552,7 @@ namespace wykobi
                         const T& x4, const T& y4,
                         const T& epsilon)
    {
-      return is_equal(((y1 - y2) * (x3 - x4)),((y3 - y4) * (x1 - x2)),epsilon);
+      return is_equal(((y1 - y2) * (x3 - x4)),((y3 - y4) * (x1 - x2)), epsilon);
    }
 
    template <typename T>
