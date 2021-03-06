@@ -18,7 +18,7 @@
 */
 
 
-#include <bits/c++config.h>
+//#include <bits/c++config.h>
 #include "wykobi.hpp"
 #include "wykobi_math.hpp"
 
