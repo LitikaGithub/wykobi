@@ -18,6 +18,7 @@
 */
 
 
+#include <bits/c++config.h>
 #include "wykobi.hpp"
 #include "wykobi_math.hpp"
 
@@ -28,11 +29,15 @@ namespace wykobi
                           const T& x2, const T& y2,
                           const T& px, const T& py)
    {
-      const T orin = (x2 - x1) * (py - y1) - (px - x1) * (y2 - y1);
+      const T ux = x2 - x1;
+      const T uy = y2 - y1;
 
-      if (orin > T(0.0))      return LeftHandSide;         /* Orientaion is to the left-hand side  */
-      else if (orin < T(0.0)) return RightHandSide;        /* Orientaion is to the right-hand side */
-      else                    return CollinearOrientation; /* Orientaion is neutral aka collinear  */
+      T orin = ux * (py - y1) - (px - x1) * uy;
+      orin  /= sqrt(ux * ux + uy * uy);
+
+      if (is_equal(orin, T(0.0))) return CollinearOrientation; /* Orientaion is neutral aka collinear  */
+      else if (orin > T(0.0))     return LeftHandSide;         /* Orientaion is to the left-hand side  */
+      else                        return RightHandSide;        /* Orientaion is to the right-hand side */
    }
 
    template <typename T>
@@ -49,59 +54,16 @@ namespace wykobi
       const T vy = y3 - y1;
       const T vz = z3 - z1;
 
-      // orin = dot_product(p1, cross_product(p3 - p1, p2 - p1))
-      const T orin = (px - x1) * (uy * vz - vy * uz) +
-                     (py - y1) * (uz * vx - vz * ux) +
-                     (pz - z1) * (ux * vy - vx * uy) ;
+      // orin = dot_product(p1, cross_product(p2 - p1, p3 - p1))
+      T orin = (px - x1) * (uy * vz - vy * uz) +
+               (py - y1) * (uz * vx - vz * ux) +
+               (pz - z1) * (ux * vy - vx * uy) ;
 
-      if (orin < T(0.0))      return BelowOrientation;    /* Orientaion is below plane                      */
-      else if (orin > T(0.0)) return AboveOrientation;    /* Orientaion is above plane                      */
-      else                    return CoplanarOrientation; /* Orientaion is coplanar to plane if Result is 0 */
-   }
+      orin /= sqrt(ux * ux + uy * uy + uz * uz);
 
-   template <typename T>
-   inline int robust_orientation(const T& x1, const T& y1,
-                                 const T& x2, const T& y2,
-                                 const T& px, const T& py)
-   {
-      const T orin = (x2 - x1) * (py - y1) - (px - x1) * (y2 - y1);
-
-      /*
-         Calculation Policy:
-         if |Orin - Orin`| < Epsilon then Orin` is assumed to be equal to zero.
-         Where:
-           Orin : is the "real" mathematically precise orientation value, using infinite
-                  precision arithmetic (hypothetical)
-           Orin`: is the calculated imprecise orientation value, using finite precision
-                  arithmetic
-      */
-      if (is_equal(orin,T(0.0))) return CollinearOrientation; /* orientaion is neutral aka collinear  */
-      else if (orin < T(0.0))    return RightHandSide;        /* orientaion is to the right-hand side */
-      else                       return LeftHandSide;         /* orientaion is to the left-hand side  */
-   }
-
-   template <typename T>
-   inline int robust_orientation(const T& x1, const T& y1, const T& z1,
-                                 const T& x2, const T& y2, const T& z2,
-                                 const T& x3, const T& y3, const T& z3,
-                                 const T& px, const T& py, const T& pz)
-   {
-      const T ux = x2 - x1;
-      const T uy = y2 - y1;
-      const T uz = z2 - z1;
-
-      const T vx = x3 - x1;
-      const T vy = y3 - y1;
-      const T vz = z3 - z1;
-
-      // orin = dot_product(p1, cross_product(p3 - p1, p2 - p1))
-      const T orin = (px - x1) * (uy * vz - vy * uz) +
-                     (py - y1) * (uz * vx - vz * ux) +
-                     (pz - z1) * (ux * vy - vx * uy) ;
-
-      if (is_equal(orin,T(0.0))) return CoplanarOrientation; /* Orientaion is coplanar to plane if Result is 0 */
-      else if (orin < T(0.0))    return BelowOrientation;    /* Orientaion is below plane                      */
-      else                       return AboveOrientation;    /* Orientaion is above plane                      */
+      if (is_equal(orin, T(0.0)))  return CoplanarOrientation; /* Orientaion is coplanar to plane if Result is 0 */
+      else if (orin < T(0.0))      return BelowOrientation;    /* Orientaion is below plane                      */
+      else                         return AboveOrientation;    /* Orientaion is above plane                      */
    }
 
    template <typename T>
@@ -617,7 +579,7 @@ namespace wykobi
      }
      return less_than_or_equal(
          lay_distance(point4, make_plane(point1, point2, point3, false)),
-         sqr(epsilon));
+         epsilon);
    }
 
    template <typename T>
@@ -5006,16 +4968,20 @@ namespace wykobi
       const int or1 = orientation(x1, y1, x2, y2, px, py);
       const int or2 = orientation(x2, y2, x3, y3, px, py);
 
-      if ((or1 * or2) == -1)
+      if ((or1 * or2) == -1) {
          return false;
+      }
+      else if (or1  == 0 && or2 == 0) {
+         return true;
+      }
       else
       {
          int or3 = orientation(x3, y3, x1, y1, px, py);
-         if ((or1 == or3) || (0 == or3))
+         if ((or1 == or3) || (CollinearOrientation == or3))
             return true;
-         else if (0 == or1)
+         else if (CollinearOrientation == or1)
             return ((or2 * or3) >= 0);
-         else if (0 == or2)
+         else if (CollinearOrientation == or2)
             return ((or1 * or3) >= 0);
          else
             return false;
@@ -5088,13 +5054,13 @@ namespace wykobi
       if ((or1 == or2) && (or2 == or3) && (or3 == or4))
          return true;
       else if (0 == or1)
-         return (0 == (or2 * or4));
+         return (0 <= (or2 * or4));
       else if (0 == or2)
-         return (0 == (or1 * or3));
+         return (0 <= (or1 * or3));
       else if (0 == or3)
-         return (0 == (or2 * or4));
+         return (0 <= (or2 * or4));
       else if (0 == or4)
-         return (0 == (or1 * or3));
+         return (0 <= (or1 * or3));
       else
          return false;
    }
@@ -5108,7 +5074,7 @@ namespace wykobi
    {
       return point_in_quadix
              (
-                point.x,  point.y,
+               point.x,  point.y,
                point1.x, point1.y,
                point2.x, point2.y,
                point3.x, point3.y,
@@ -8725,23 +8691,42 @@ namespace wykobi
    inline bool point_in_convex_polygon(const T& px, const T& py, const polygon<T,2>& polygon)
    {
       if (polygon.size() < 3) return false;
+      if (point_on_polygon_edge(px, py, polygon)) return true;
+
+      std::size_t j = static_cast<int>(polygon.size()) - 1;
 
       int initial_orientation = orientation
                                 (
                                   polygon[0],
-                                  polygon[static_cast<int>(polygon.size()) - 1],
+                                  polygon[j],
                                   px, py
                                 );
-      std::size_t j = 0;
+      if (initial_orientation == CollinearOrientation) {
+        if (is_equal(polygon[0].x, polygon[j].x)) {
+          return greater_than_or_equal(py, polygon[0].y) !=
+                 greater_than_or_equal(py, polygon[j].y);
+        } else {
+          return greater_than_or_equal(px, polygon[0].x) !=
+                 greater_than_or_equal(px, polygon[j].x);
+        }
+      }
 
-      for (std::size_t i = 1; i < polygon.size(); ++i)
-      {
-         if (initial_orientation != orientation(polygon[i],polygon[j],px,py))
-         {
-            return false;
-         }
-
-         j = i;
+      j = 0;
+      for (std::size_t i = 1; i < polygon.size(); j = i++) {
+        int k = orientation(polygon[i], polygon[j], px, py);
+        if (k == CollinearOrientation) {
+          // check for point on line
+          if (is_equal(polygon[i].x, polygon[j].x)) {
+            return greater_than_or_equal(py, polygon[i].y) !=
+                   greater_than_or_equal(py, polygon[j].y);
+          } else {
+            return greater_than_or_equal(px, polygon[i].x) !=
+                   greater_than_or_equal(px, polygon[j].x);
+          }
+        }
+        if (initial_orientation != k) {
+          return false;
+        }
       }
 
       return true;
@@ -8782,26 +8767,41 @@ namespace wykobi
    template <typename T>
    inline bool point_in_polygon(const T& px, const T& py, const polygon<T,2>& polygon)
    {
+      /**
+       * @brief The algorithm is Randolph Frankin's version of ray-casting
+       *        https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html.
+       *
+       *        More introduction of the other methods is here
+       *        https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
+       *
+       */
       bool result = false;
       if (polygon.size() < 3) return false;
 
       std::size_t j = polygon.size() - 1;
 
-      for (std::size_t i = 0; i < polygon.size(); ++i)
+      for (std::size_t i = 0; i < polygon.size(); j=i++)
       {
-         if (
-              ((polygon[i].y <= py) && (py < polygon[j].y)) || // an upward crossing
-              ((polygon[j].y <= py) && (py < polygon[i].y))    // a downward crossing
-            )
+         // py sits between pnt_i and pnt_j while pnt_i and pnt_j don't have the same y
+         if ((polygon[i].y < py) != (polygon[j].y < py))
          {
             /* compute the edge-ray intersect @ the x-coordinate */
-            if (px - polygon[i].x < ((polygon[j].x - polygon[i].x) * (py - polygon[i].y) / (polygon[j].y - polygon[i].y)))
+            T dx = (px - polygon[i].x) - ((polygon[j].x - polygon[i].x) * (py - polygon[i].y) / (polygon[j].y - polygon[i].y));
+            if (dx < T(0.0))
             {
                result = !result;
+            } else if (dx > T(0.0)) {
+               continue;
+            } else {
+               // TODO: Should I use is_equal here?
+               return true;
             }
+         } else if (is_equal(polygon[i].y, polygon[j].y) &&
+                    is_equal(py, polygon[i].y) &&
+                    (greater_than_or_equal(px, polygon[i].x) !=
+                     greater_than_or_equal(px, polygon[j].x))) {
+           return true;
          }
-
-         j = i;
       }
 
       return result;
@@ -8845,7 +8845,7 @@ namespace wykobi
          j = i;
       }
 
-      return (winding_number != 0);
+      return (winding_number != 0) || point_on_polygon_edge(px, py, polygon);
    }
 
    template <typename T>
@@ -12688,11 +12688,11 @@ namespace wykobi
    template <typename T>
    inline T area(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3)
    {
-      return T(0.5) * (
+      return abs(T(0.5) * (
                         (point1.x * (point2.y - point3.y)) +
                         (point2.x * (point3.y - point1.y)) +
                         (point3.x * (point1.y - point2.y))
-                      );
+                      ));
    }
 
    template <typename T>
@@ -12716,11 +12716,11 @@ namespace wykobi
    template <typename T>
    inline T area(const triangle<T,2>& triangle)
    {
-      return T(0.5) * (
+      return abs(T(0.5) * (
                         (triangle[0].x * (triangle[1].y - triangle[2].y)) +
                         (triangle[1].x * (triangle[2].y - triangle[0].y)) +
                         (triangle[2].x * (triangle[0].y - triangle[1].y))
-                      );
+                      ));
    }
 
    template <typename T>
@@ -12744,12 +12744,12 @@ namespace wykobi
    template <typename T>
    inline T area(const quadix<T,2>& quadix)
    {
-      return T(0.5) * (
+      return abs(T(0.5) * (
                         (quadix[0].x * (quadix[1].y - quadix[3].y)) +
                         (quadix[1].x * (quadix[2].y - quadix[0].y)) +
                         (quadix[2].x * (quadix[3].y - quadix[1].y)) +
                         (quadix[3].x * (quadix[0].y - quadix[2].y))
-                      );
+                      ));
    }
 
    template <typename T>
@@ -12776,19 +12776,62 @@ namespace wykobi
    template <typename T>
    inline T area(const polygon<T,2>& polygon)
    {
-      if (polygon.size() < 3) return T(0.0);
+      std::size_t n = polygon.size();
+      if (n < 3) return T(0.0);
 
-      T result = T(0.0);
+      T result = polygon[0].x * (polygon[1].y - polygon[n-1].y);
+      for (std::size_t i = 1; i < n-1; ++i) {
+         result += polygon[i].x * (polygon[i+1].y - polygon[i-1].y);
+      }
+      result += polygon[n-1].x * (polygon[0].y - polygon[n-2].y);
 
-      std::size_t j = polygon.size() - 1;
+      return abs(result * T(0.5));
+   }
 
-      for (std::size_t i = 0; i < polygon.size(); ++i)
-      {
-         result += ((polygon[j].x * polygon[i].y) - (polygon[j].y * polygon[i].x));
-         j = i;
+   template <typename T>
+   inline T area(const polygon<T, 3>& polygon)
+   {
+      std::size_t n = polygon.size();
+      if (n < 3) return T(0.0);
+
+
+      // calculate the normal vector of the polygon
+      T ux = polygon[1].x - polygon[0].x;
+      T uy = polygon[1].y - polygon[0].y;
+      T uz = polygon[1].z - polygon[0].z;
+      vector3d<T> N;
+      T vx,vy,vz, an;
+      for (std::size_t i = 2; i < n; ++i) {
+         vx = polygon[i].x - polygon[0].x;
+         vy = polygon[i].y - polygon[0].y;
+         vz = polygon[i].z - polygon[0].z;
+         N.x = uy*vz-uz*vy;
+         N.y = uz*vx-ux*vz;
+         N.z = ux*vy-uy*vx;
+         an = sqrt(N.x*N.x + N.y*N.y + N.z*N.z);
+         if (!is_equal(an, T(0.0))) break;
       }
 
-      return abs<T>(result * T(0.5));
+      // select largest abs coordinate to ignore for projection
+      std::size_t coord = 0;
+      T p = abs(N.x);
+      for (std::size_t i = 1; i < 3; ++i) {
+         if (abs(N[i]) > p) p = abs(N[i]);
+      }
+      std::size_t coord2 = (coord == 2 ? 0 : coord+1);
+      std::size_t coord3 = (coord2 == 2 ? 0 : coord2+1);
+
+      // calculate the area in the projection plane
+      T result = polygon[0][coord] * (polygon[1][coord2] - polygon[n-1][coord2]);
+      for (std::size_t i = 1; i < n-1; ++i) {
+         result += polygon[i][coord] * (polygon[i+1][coord2] - polygon[i-1][coord2]);
+      }
+      result += polygon[n-1][coord] * (polygon[0][coord2] - polygon[n-2][coord2]);
+
+      // scale the surface
+      result *= T(0.5) * an / N[coord3];
+
+      return abs(result);
    }
 
    template <typename T>
