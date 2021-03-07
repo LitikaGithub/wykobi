@@ -3098,7 +3098,7 @@ namespace wykobi
    inline point3d<T> intersection_point(const ray<T,3>& ray, const triangle<T,3>& triangle)
    {
       point3d<T> point;
-      int r = intersection_point(ray, triangle, point, false);
+      intersection_point(ray, triangle, point, false);
       return point;
    }
 
