@@ -577,8 +577,8 @@ namespace wykobi
         return true;
      }
      return less_than_or_equal(
-         lay_distance(point4, make_plane(point1, point2, point3, false)),
-         epsilon);
+         distance(point4, make_plane(point1, point2, point3, false)),
+         T(0.0));
    }
 
    template <typename T>
@@ -1038,12 +1038,12 @@ namespace wykobi
       }
       else
       {
-         // line is parallel to the triangle or in the triangle
-         if (is_equal(dot_product(diff, normal), T(0.0))) {
-            return true;
-         } else {
-            return false;
-         }
+        // we are coplanar. The ray/triangle intersection has a 
+        // robust coplanar test. So, we just use that.
+        ray<T, 3> r1 = make_ray_with_points(line[0], line[1]);
+        ray<T, 3> r2 = make_ray_with_points(line[1], line[0]);
+
+        return intersect(r1, triangle) || intersect(r2, triangle);
       }
 
       T val1 = sign * dot_product(line_dir,(diff * edge2));
@@ -1795,7 +1795,7 @@ namespace wykobi
    inline bool intersect(const ray<T,3>& ray, const triangle<T,3>& triangle)
    {
       point3d<T> point;
-      int r = intersection_point(ray, triangle, point, true);
+      int r = intersection_point_worker(ray, triangle, point);
       return r != 0;
    }
 
@@ -1866,7 +1866,9 @@ namespace wykobi
          return ((-distance(ray.origin,plane) / denom) >= T(0.0));
       }
       else
-         return false;
+      {
+         return is_equal(distance(ray.origin, plane), T(0.0));
+      }
    }
 
    template <typename T>
@@ -2317,6 +2319,15 @@ namespace wykobi
       return is_inifinity(point_[0]);
    }
 
+   /*
+      Litika verified
+
+      - Epsilon comparisons
+      - Intersection includes touching
+      - Invalid result return degenerate entity that returns true for is_degenerate()
+   */
+  
+
    template <typename T>
    inline point3d<T> intersection_point(const segment<T,3>& segment,
                                         const plane<T,3>& plane)
@@ -2331,7 +2342,7 @@ namespace wykobi
       {
          const T t = -distance(segment[0],plane) / denom;
 
-         if ((t > T(0.0)) && (t < T(1.0)))
+         if (greater_than_or_equal(t, T(0.0)) && greater_than_or_equal(T(1.0), t))
          {
             ipoint = segment[0] + t * (segment[1] - segment[0]);
          }
@@ -2998,7 +3009,7 @@ namespace wykobi
    }
 
    template <typename T>
-   inline int intersection_point(const ray<T,3>& ray, const triangle<T,3>& triangle, point3d<T>& point, bool robust)
+   inline int intersection_point_worker(const ray<T,3>& ray, const triangle<T,3>& triangle, point3d<T>& point)
    {
       point = degenerate_point3d<T>();
       // This is an implementation of Möller–Trumbore intersection algorithm
@@ -3026,21 +3037,19 @@ namespace wykobi
 
       // if det == 0, it means either the ray is in the plane or it's parallel to the plane
       if (is_equal(det,T(0.0))) {
-         if (robust) {
-            if (robust_coplanar(ray.origin, triangle[0], triangle[1], triangle[2])) {
-               if (is_equal(edge1_x*edge2_y - edge1_y*edge2_x, T(0.0)))
-               {
-                  if (is_equal(edge1_y*edge2_z - edge1_z*edge2_y, T(0.0)))
-                  {
-                     // Project to x-z plane
-                     return intersect(project_onto_plane(ray,1), project_onto_plane(triangle,1)) ? 1 : 0;
-                  }
-                  // Project to y-z plane
-                  return intersect(project_onto_plane(ray,0), project_onto_plane(triangle,0)) ? 1 : 0;
-               }
-               // Project to x-y plane
-               return intersect(project_onto_plane(ray,2), project_onto_plane(triangle,2)) ? 1: 0;
+        if (robust_coplanar(ray.origin, triangle[0], triangle[1], triangle[2])) {
+            if (is_equal(edge1_x*edge2_y - edge1_y*edge2_x, T(0.0)))
+            {
+                if (is_equal(edge1_y*edge2_z - edge1_z*edge2_y, T(0.0)))
+                {
+                    // Project to x-z plane
+                    return intersect(project_onto_plane(ray,1), project_onto_plane(triangle,1)) ? 1 : 0;
+                }
+                // Project to y-z plane
+                return intersect(project_onto_plane(ray,0), project_onto_plane(triangle,0)) ? 1 : 0;
             }
+            // Project to x-y plane
+            return intersect(project_onto_plane(ray,2), project_onto_plane(triangle,2)) ? 1: 0;
          }
          return 0;
       }
@@ -3098,7 +3107,9 @@ namespace wykobi
    inline point3d<T> intersection_point(const ray<T,3>& ray, const triangle<T,3>& triangle)
    {
       point3d<T> point;
-      intersection_point(ray, triangle, point, false);
+
+      // this will correctly return a degenerate point if the ray intersected the triangle and is coplanar
+      intersection_point_worker(ray, triangle, point);
       return point;
    }
 
@@ -3113,7 +3124,7 @@ namespace wykobi
       {
          const T t = -distance(ray.origin,plane) / denom;
 
-         if (t >= T(0.0))
+         if (greater_than_or_equal(t, T(0.0)))
          {
             ipoint = ray.origin + t * ray.direction;
          }
@@ -15922,9 +15933,20 @@ namespace wykobi
    }
 
    template <typename T>
+   inline bool is_partially_degenerate(const point2d<T>& point) {
+     return is_inifinity(point.x) || is_inifinity(point.y);
+   }
+
+   template <typename T>
    inline bool is_degenerate(const point3d<T>& point) {
       return is_inifinity(point.x) && is_inifinity(point.y) && is_inifinity(point.z);
    }
+
+   template <typename T>
+   inline bool is_partially_degenerate(const point3d<T>& point) {
+      return is_inifinity(point.x) || is_inifinity(point.y) || is_inifinity(point.z);
+   }
+
 
    template <typename T>
    inline point2d<T> degenerate_point2d()
