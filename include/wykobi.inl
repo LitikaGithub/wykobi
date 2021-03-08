@@ -354,24 +354,28 @@ namespace wykobi
       return is_equal((x2 - x1) * (y3 - y1) ,(x3 - x1) * (y2 - y1),epsilon);
    }
 
+
    template <typename T>
    inline bool collinear(const T& x1, const T& y1, const T& z1,
                          const T& x2, const T& y2, const T& z2,
                          const T& x3, const T& y3, const T& z3,
                          const T& epsilon)
    {
-      const T dx1 = x2 - x1;
-      const T dy1 = y2 - y1;
-      const T dz1 = z2 - z1;
-      const T dx2 = x3 - x1;
-      const T dy2 = y3 - y1;
-      const T dz2 = z3 - z1;
-      const T cx = (dy1 * dz2) - (dy2 * dz1);
-      const T cy = (dx2 * dz1) - (dx1 * dz2);
-      const T cz = (dx1 * dy2) - (dx2 * dy1);
+      const T leydist1 = lay_distance(x1,y1,z1,x2,y2,z2);
+      const T leydist2 = lay_distance(x2,y2,z2,x3,y3,z3);
+      const T leydist3 = lay_distance(x3,y3,z3,x1,y1,z1);
 
-      return is_equal(cx * cx + cy * cy + cz * cz, T(0.0), epsilon);
+      if (leydist1 >= leydist2)
+         if (leydist1 >= leydist3)
+            return is_equal(minimum_distance_from_point_to_line(x3,y3,z3,x1,y1,z1,x2,y2,z2),T(0.0),epsilon);
+         else
+            return is_equal(minimum_distance_from_point_to_line(x2,y2,z2,x3,y3,z3,x1,y1,z1),T(0.0),epsilon);
+      else if (leydist2 >= leydist3)
+         return is_equal(minimum_distance_from_point_to_line(x1,y1,z1,x2,y2,z2,x3,y3,z3),T(0.0),epsilon);
+      else
+         return is_equal(minimum_distance_from_point_to_line(x2,y2,z2,x3,y3,z3,x1,y1,z1),T(0.0),epsilon);
    }
+
 
    template <typename T>
    inline bool collinear(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3)
@@ -415,34 +419,6 @@ namespace wykobi
    inline bool robust_collinear(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3, const T& epsilon)
    {
       return robust_collinear(point1.x,point1.y,point2.x,point2.y,point3.x,point3.y,epsilon);
-   }
-
-   template <typename T>
-   inline bool robust_collinear(const T& x1, const T& y1, const T& z1,
-                                const T& x2, const T& y2, const T& z2,
-                                const T& x3, const T& y3, const T& z3, const T& epsilon)
-   {
-      const T leydist1 = lay_distance(x1,y1,z1,x2,y2,z2);
-      const T leydist2 = lay_distance(x2,y2,z2,x3,y3,z3);
-      const T leydist3 = lay_distance(x3,y3,z3,x1,y1,z1);
-
-      if (leydist1 >= leydist2)
-         if (leydist1 >= leydist3)
-            return is_equal(minimum_distance_from_point_to_line(x3,y3,z3,x1,y1,z1,x2,y2,z2),T(0.0),epsilon);
-         else
-            return is_equal(minimum_distance_from_point_to_line(x2,y2,z2,x3,y3,z3,x1,y1,z1),T(0.0),epsilon);
-      else if (leydist2 >= leydist3)
-         return is_equal(minimum_distance_from_point_to_line(x1,y1,z1,x2,y2,z2,x3,y3,z3),T(0.0),epsilon);
-      else
-         return is_equal(minimum_distance_from_point_to_line(x2,y2,z2,x3,y3,z3,x1,y1,z1),T(0.0),epsilon);
-   }
-
-   template <typename T>
-   inline bool robust_collinear(const point3d<T>& point1, const point3d<T>& point2, const point3d<T>& point3, const T& epsilon)
-   {
-      return robust_collinear(point1.x, point1.y, point1.z,
-                              point2.x, point2.y, point2.z,
-                              point3.x, point3.y, point3.z, epsilon);
    }
 
    template <typename T>
@@ -15850,7 +15826,7 @@ namespace wykobi
       return (is_equal(triangle[0],triangle[1]))                   ||
              (is_equal(triangle[0],triangle[2]))                   ||
              (is_equal(triangle[1],triangle[2]))                   ||
-             robust_collinear(triangle[0],triangle[1],triangle[2]) ||
+             collinear(triangle[0],triangle[1],triangle[2]) ||
              is_equal(distance(edge(triangle,0)),(distance(edge(triangle,1)) + distance(edge(triangle,2)))) ||
              is_equal(distance(edge(triangle,1)),(distance(edge(triangle,2)) + distance(edge(triangle,0)))) ||
              is_equal(distance(edge(triangle,2)),(distance(edge(triangle,0)) + distance(edge(triangle,1))));

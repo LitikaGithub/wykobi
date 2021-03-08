@@ -1225,12 +1225,12 @@ namespace wykobi
                          const T& x3, const T& y3,
                          const T& epsilon = epsilon<T>());
 
+
    template <typename T>
    inline bool collinear(const T& x1, const T& y1, const T& z1,
                          const T& x2, const T& y2, const T& z2,
                          const T& x3, const T& y3, const T& z3,
                          const T& epsilon = epsilon<T>());
-
 
    template <typename T>
    inline bool collinear(const point2d<T>& point1, const point2d<T>& point2, const point2d<T>& point3);
@@ -1253,13 +1253,6 @@ namespace wykobi
 
    template <typename T>
    inline bool robust_collinear(const line<T,3>& line, const point3d<T>& point, const T& epsilon = epsilon<T>());
-
-   template <typename T>
-   inline bool robust_collinear(const T& x1, const T& y1, const T& z1,
-                                const T& x2, const T& y2, const T& z2,
-                                const T& x3, const T& y3, const T& z3, const T& epsilon = epsilon<T>());
-   template <typename T>
-   inline bool robust_collinear(const point3d<T>& point1, const point3d<T>& point2, const point3d<T>& point3, const T& epsilon = epsilon<T>());
 
    /**
     * @brief Check whether (px, py) is on the line segment (x1,y1)--(x2,y2)
