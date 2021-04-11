@@ -937,7 +937,7 @@ namespace wykobi
 
      plane(PointType p, VectorType n) {
         normal = normalize(n);
-        constant = -dot_product(p, n);
+        constant = -dot_product(p, normal);
      }
 
       // The distance of the origin to the plane, it will be negtive if
